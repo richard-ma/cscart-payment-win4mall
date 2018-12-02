@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<addon scheme='2.0'>
+    <id>win4mall</id>
+    <name>Win4mall</name>
+    <description>Add win4mall payment method</description>
+    <version>1.0</version>
+    <priority>100500</priority>
+    <functions>
+        <item for="install">fn_win4mall_install</item>
+        <item for="uninstall">fn_win4mall_uninstall</item>
+    </functions>
+</addon>
