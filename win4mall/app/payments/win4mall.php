@@ -15,7 +15,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
      */
     $data = array(
         /* basic information */
-        'MerNo' => $processor_data['processor_params']['accno'],
+        'merchantMID' => $processor_data['processor_params']['accno'],
         'md5key' => $processor_data['processor_params']['md5key'],
         'newcardtype' => get_card_type($payment_info['card_number']),
         'cardnum' => get_base64encode($payment_info["card_number"]),
@@ -26,8 +26,8 @@ if (defined('PAYMENT_NOTIFICATION')) {
         'BillNo' => $order_info['order_id'],
         'Amount' => $order_info['total'],
         'Currency' => get_currency_code(CART_PRIMARY_CURRENCY),
-        'Language' => strtoupper($order_info['lang_code']),
-        'ReturnURL' => fn_url("payment_notification.return?payment=sfepay&order_id=$order_id&security_hash=" . fn_generate_security_hash()),
+        'Language' => strtolower($order_info['lang_code']),
+        'ReturnURL' => fn_url("payment_notification.return?payment=win4mall&order_id=$order_id&security_hash=" . fn_generate_security_hash()),
         /* shipping information */
         'shippingFirstName' => $order_info['s_firstname'],
         'shippingLastName' => $order_info['s_lastname'],
@@ -50,12 +50,11 @@ if (defined('PAYMENT_NOTIFICATION')) {
         'state' => $order_info['b_state'],
         'country' => $payment_info["card_country"],
         /* system default information */
-        'addIp' => get_client_ip(),
-        'sfeVersion' => 'ZKF1.1.1',
+        'ipAddr' => get_client_ip(),
     );
 
-    $data['MD5info'] = strtoupper(md5(
-        $data['MerNo'] . 
+    $data['HASH'] = strtoupper(md5(
+        $data['merchantMID'] . 
         $data['BillNo'] . 
         $data['Currency'] . 
         $data['Amount'] . 
@@ -66,15 +65,13 @@ if (defined('PAYMENT_NOTIFICATION')) {
 
     //fn_print_r($data);
 
-    $trade_url = 'https://www.sfepay.com/directPayment';
+    $trade_url = 'https://www.win4mall.com/onlinepayByWin';
     $re = parse_payment_return_data(curl_post($trade_url, $data));
-
-    //TODO 服务端返回的md5暂时失灵，跳过验证步骤
-    // check_response_data($re, $data['md5key']);
 
     //fn_print_r($re);
 
-    if ($re['Succeed'] == '88' || $re['Succeed'] == '19') { // 88成功 19待银行处理
+    if (check_response_data($re, $data['md5key']) == True && // md5检测成功
+            ($re['Succeed'] == '88' || $re['Succeed'] == '19' || $re['Succeed'] == '90')) { // 88成功 19待银行处理 90待确定
         $pp_response['order_status'] = 'P';
         $pp_response['reason_text'] = $re['Result'];
 
@@ -98,7 +95,7 @@ function check_response_data($data, $md5key) {
         $md5key
     ));
 
-    return $checksum === $data['MD5info'] ? True : False;
+    return $checksum === $data['MD5info'];
 }
 
 function get_base64encode($string) {
@@ -126,15 +123,7 @@ function curl_post($url, $data) {
 }
 
 function parse_payment_return_data($data_string) {
-    $split_data = explode('&', $data_string);
-
-    $data = array();
-    foreach ($split_data as $pair_string) {
-        list($key, $value) = explode('=', $pair_string);
-        $data[$key] = $value;
-    }
-
-    return $data;
+    return json_decode($data_string, true);
 }
 
 function get_client_ip() {
