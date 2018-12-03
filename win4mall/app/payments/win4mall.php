@@ -24,7 +24,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         'cvv2' => get_base64encode($payment_info["cvv2"]),
         'month' => get_base64encode($payment_info["expiry_month"]),
         'year' => get_base64encode($payment_info["expiry_year"]),
-        'cardbank' => $payment_info["card_bank"],
+        //'cardbank' => $payment_info["card_bank"], // Optional
         'BillNo' => $order_info['order_id'],
         'Amount' => $order_info['total'],
         'Currency' => get_currency_code(CART_PRIMARY_CURRENCY),
@@ -66,8 +66,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $data['md5key']
     ));
 
-    fn_print_r($data);
-    exit();
+    //fn_print_r($data);
 
     $trade_url = 'https://www.win4mall.com/onlinepayByWin';
     $re = parse_payment_return_data(curl_post($trade_url, $data));

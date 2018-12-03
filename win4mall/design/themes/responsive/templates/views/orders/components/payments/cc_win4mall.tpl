@@ -29,10 +29,10 @@
                 <input type="text" id="credit_card_month_{$id_suffix}" name="payment_info[expiry_month]" value="" size="2" maxlength="2" class="ty-credit-card__input-short " />&nbsp;&nbsp;/&nbsp;&nbsp;<input type="text" id="credit_card_year_{$id_suffix}"  name="payment_info[expiry_year]" value="" size="2" maxlength="2" class="ty-credit-card__input-short" />&nbsp;
             </div>
     
-            <div class="ty-credit-card__control-group ty-control-group">
-                <label for="credit_card_name_{$id_suffix}" class="ty-control-group__title cm-required">Credit Card Bank</label>
-                <input size="35" type="text" id="credit_card_name_{$id_suffix}" name="payment_info[card_bank]" value="" class="cm-cc-name ty-credit-card__input" />
-            </div>
+            {*<div class="ty-credit-card__control-group ty-control-group">*}
+                {*<label for="credit_card_name_{$id_suffix}" class="ty-control-group__title cm-required">Credit Card Bank</label>*}
+                {*<input size="35" type="text" id="credit_card_name_{$id_suffix}" name="payment_info[card_bank]" value="" class="cm-cc-name ty-credit-card__input" />*}
+            {*</div>*}
     
             <div class="ty-credit-card__control-group ty-control-group">
                 <label for="credit_card_country_{$id_suffix}" class="ty-control-group__title cm-required">Country</label>
