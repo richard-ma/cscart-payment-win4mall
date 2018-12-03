@@ -2,6 +2,8 @@
 
 if (!defined('BOOTSTRAP')) { die('Access denied'); }
 
+use Tygh\Registry;
+
 if (defined('PAYMENT_NOTIFICATION')) {
     /**
      * Receiving and processing the answer
@@ -27,7 +29,8 @@ if (defined('PAYMENT_NOTIFICATION')) {
         'Amount' => $order_info['total'],
         'Currency' => get_currency_code(CART_PRIMARY_CURRENCY),
         'Language' => strtolower($order_info['lang_code']),
-        'ReturnURL' => fn_url("payment_notification.return?payment=win4mall&order_id=$order_id&security_hash=" . fn_generate_security_hash()),
+        //'ReturnURL' => fn_url("payment_notification.return?payment=win4mall&order_id=$order_id&security_hash=" . fn_generate_security_hash()),
+        'ReturnURL' => fn_url(Registry::get('config.https_location') . "/wpay/results.php"),
         /* shipping information */
         'shippingFirstName' => $order_info['s_firstname'],
         'shippingLastName' => $order_info['s_lastname'],
@@ -63,7 +66,8 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $data['md5key']
     ));
 
-    //fn_print_r($data);
+    fn_print_r($data);
+    exit();
 
     $trade_url = 'https://www.win4mall.com/onlinepayByWin';
     $re = parse_payment_return_data(curl_post($trade_url, $data));
