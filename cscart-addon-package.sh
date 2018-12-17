@@ -16,7 +16,10 @@ ADDON_NAME=$1
 # check ADDON_NAME directory
 if [ -d $ADDON_NAME ]
 then
-    rm $ADDON_NAME.tar.gz # remove exists file
+    if [ -f $ADDON_NAME.tar.gz ]
+    then
+        rm $ADDON_NAME.tar.gz # remove exists file
+    fi
     cd $ADDON_NAME
     tar -zcvf $ADDON_NAME.tar.gz * # add all files to tarball
     mv $ADDON_NAME.tar.gz ..
