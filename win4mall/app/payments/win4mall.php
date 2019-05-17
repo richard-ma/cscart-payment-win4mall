@@ -9,7 +9,11 @@ if (defined('PAYMENT_NOTIFICATION')) {
      * Receiving and processing the answer
      * from third-party services and payment systems.
      */
-    fn_print_die('payment notification response data');
+    if ($mode = 'return') {
+        fn_print_die('return: '.$_GET['order_id']);
+    } else {
+        fn_print_die('payment notification response data');
+    }
 } else {
     /**
      * Running the necessary logics for payment acceptance
@@ -29,8 +33,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         'Amount' => $order_info['total'],
         'Currency' => get_currency_code(CART_PRIMARY_CURRENCY),
         'Language' => strtolower($order_info['lang_code']),
-        //'ReturnURL' => fn_url("payment_notification.return?payment=win4mall&order_id=$order_id&security_hash=" . fn_generate_security_hash()),
-        'ReturnURL' => fn_url(Registry::get('config.https_location') . "/wpay/results.php"),
+        'ReturnURL' => fn_url("payment_notification.return?payment=win4mall&order_id=".$order_info['order_id'], AREA, 'current'),
         /* shipping information */
         'shippingFirstName' => $order_info['s_firstname'],
         'shippingLastName' => $order_info['s_lastname'],
@@ -66,21 +69,27 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $data['md5key']
     ));
 
-    //fn_print_r($data);
+    fn_print_r($data);
 
     $trade_url = 'https://www.win4mall.com/onlinepayByWin';
     $re = parse_payment_return_data(curl_post($trade_url, $data));
 
-    //fn_print_r($re);
+    fn_print_r($re);
+    exit;
 
     if (check_response_data($re, $data['md5key']) == True && // md5检测成功
             ($re['Succeed'] == '88' || $re['Succeed'] == '19' || $re['Succeed'] == '90')) { // 88成功 19待银行处理 90待确定
-        $pp_response['order_status'] = 'P';
-        $pp_response['reason_text'] = $re['Result'];
 
-        $order_id = (int)$data['BillNo'];
-        fn_finish_payment($order_id, $pp_response);
-        fn_order_placement_routines('route', $order_id);
+        if (isset($re['redirect3dUrl'])) {
+            fn_redirect($re['redirect3dUrl'], true);
+        } else {
+            $pp_response['order_status'] = 'P';
+            $pp_response['reason_text'] = $re['Result'];
+
+            $order_id = (int)$data['BillNo'];
+            fn_finish_payment($order_id, $pp_response);
+            fn_order_placement_routines('route', $order_id);
+        }
     } else {
         // 支付失败
         $pp_response['order_status'] = 'F';
