@@ -9,8 +9,12 @@ if (defined('PAYMENT_NOTIFICATION')) {
      * Receiving and processing the answer
      * from third-party services and payment systems.
      */
-    if ($mode = 'return') {
-        fn_print_die('return: '.$_GET['order_id']);
+    if ($mode = 'return' && isset($_GET['order_id'])) {
+        $order_id = $_GET['order_id'];
+        $pp_response['order_status'] = 'P';
+        $pp_response['reason_text'] = $re['Result'];
+
+        fn_finish_payment($order_id, $pp_response);
     } else {
         fn_print_die('payment notification response data');
     }
@@ -69,13 +73,12 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $data['md5key']
     ));
 
-    fn_print_r($data);
+    //fn_print_r($data);
 
     $trade_url = 'https://www.win4mall.com/onlinepayByWin';
     $re = parse_payment_return_data(curl_post($trade_url, $data));
 
-    fn_print_r($re);
-    exit;
+    //fn_print_r($re);
 
     if (check_response_data($re, $data['md5key']) == True && // md5检测成功
             ($re['Succeed'] == '88' || $re['Succeed'] == '19' || $re['Succeed'] == '90')) { // 88成功 19待银行处理 90待确定
