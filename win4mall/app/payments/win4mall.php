@@ -10,13 +10,13 @@ if (defined('PAYMENT_NOTIFICATION')) {
      * from third-party services and payment systems.
      */
     if ($mode = 'return') {
-        $order_id = $_POST['billno'];
-        if ($_POST['succeed'] == '1') {
+        $order_id = $_REQUEST['billno'];
+        if ($_REQUEST['succeed'] == '1') {
             $pp_response['order_status'] = 'P';
         } else {
             $pp_response['order_status'] = 'F';
         }
-        $pp_response['reason_text'] = $_POST['orderinfo'];
+        $pp_response['reason_text'] = $_REQUEST['orderinfo'];
 
         fn_finish_payment($order_id, $pp_response);
     } else {
