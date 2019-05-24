@@ -10,13 +10,13 @@ if (defined('PAYMENT_NOTIFICATION')) {
      * from third-party services and payment systems.
      */
     if ($mode = 'return') {
-        $order_id = $_POST['billno'];
-        if ($_POST['succeed'] == '1') {
+        $order_id = $_REQUEST['billno'];
+        if ($_REQUEST['succeed'] == '1') {
             $pp_response['order_status'] = 'P';
         } else {
             $pp_response['order_status'] = 'F';
         }
-        $pp_response['reason_text'] = $_POST['orderinfo'];
+        $pp_response['reason_text'] = $_REQUEST['orderinfo'];
 
         fn_finish_payment($order_id, $pp_response);
     } else {
@@ -84,20 +84,19 @@ if (defined('PAYMENT_NOTIFICATION')) {
 
     //fn_print_r($re);
     //exit;
-
+    
     if (check_response_data($re, $data['md5key']) == True && // md5检测成功
             ($re['Succeed'] == '88' || $re['Succeed'] == '19' || $re['Succeed'] == '90')) { // 88成功 19待银行处理 90待确定
 
-        if (isset($re['redirect3dUrl'])) {
-            fn_redirect($re['redirect3dUrl'], true);
-        } else {
-            $pp_response['order_status'] = 'P';
-            $pp_response['reason_text'] = $re['Result'];
+        $pp_response['order_status'] = 'P';
+        $pp_response['reason_text'] = $re['Result'];
 
-            $order_id = (int)$data['BillNo'];
-            fn_finish_payment($order_id, $pp_response);
-            fn_order_placement_routines('route', $order_id);
-        }
+        $order_id = (int)$data['BillNo'];
+        fn_finish_payment($order_id, $pp_response);
+        fn_order_placement_routines('route', $order_id);
+    } elseif (isset($re['Succeed']) && $re['Succeed'] == '30') { // 30表示要进行3D验证
+        fn_redirect($re['redirect3dUrl'], true);
+        exit;
     } else {
         // 支付失败
         $pp_response['order_status'] = 'F';
