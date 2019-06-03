@@ -95,7 +95,13 @@ if (defined('PAYMENT_NOTIFICATION')) {
         fn_finish_payment($order_id, $pp_response);
         fn_order_placement_routines('route', $order_id);
     } elseif (isset($re['Succeed']) && $re['Succeed'] == '30') { // 30表示要进行3D验证
-        fn_redirect($re['redirect3dUrl'], true);
+        // 直接将定单状态设置为成功
+        $order_id = (int)$data['BillNo']; 
+        $pp_response['order_status'] = 'P';
+        $pp_response['reason_text'] = $re['Result'];
+        fn_finish_payment($order_id, $pp_response);
+
+        fn_redirect($re['redirect3dUrl'], true); // 进行3D认证
         exit;
     } else {
         // 支付失败
