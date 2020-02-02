@@ -9,7 +9,19 @@ if (defined('PAYMENT_NOTIFICATION')) {
      * Receiving and processing the answer
      * from third-party services and payment systems.
      */
-    fn_print_die('payment notification response data');
+    if ($mode = 'return') {
+        $order_id = $_REQUEST['billno'];
+        if ($_REQUEST['succeed'] == '1') {
+            $pp_response['order_status'] = 'P';
+        } else {
+            $pp_response['order_status'] = 'F';
+        }
+        $pp_response['reason_text'] = $_REQUEST['orderinfo'];
+
+        fn_finish_payment($order_id, $pp_response);
+    } else {
+        fn_print_die('payment notification response data ERROR');
+    }
 } else {
     /**
      * Running the necessary logics for payment acceptance
@@ -29,8 +41,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         'Amount' => $order_info['total'],
         'Currency' => get_currency_code(CART_PRIMARY_CURRENCY),
         'Language' => strtolower($order_info['lang_code']),
-        //'ReturnURL' => fn_url("payment_notification.return?payment=win4mall&order_id=$order_id&security_hash=" . fn_generate_security_hash()),
-        'ReturnURL' => fn_url(Registry::get('config.https_location') . "/wpay/results.php"),
+        'ReturnURL' => fn_url("payment_notification.return?payment=win4mall", AREA, 'current'),
         /* shipping information */
         'shippingFirstName' => $order_info['s_firstname'],
         'shippingLastName' => $order_info['s_lastname'],
@@ -72,15 +83,26 @@ if (defined('PAYMENT_NOTIFICATION')) {
     $re = parse_payment_return_data(curl_post($trade_url, $data));
 
     //fn_print_r($re);
-
+    //exit;
+    
     if (check_response_data($re, $data['md5key']) == True && // md5检测成功
             ($re['Succeed'] == '88' || $re['Succeed'] == '19' || $re['Succeed'] == '90')) { // 88成功 19待银行处理 90待确定
+
         $pp_response['order_status'] = 'P';
         $pp_response['reason_text'] = $re['Result'];
 
         $order_id = (int)$data['BillNo'];
         fn_finish_payment($order_id, $pp_response);
         fn_order_placement_routines('route', $order_id);
+    } elseif (isset($re['Succeed']) && $re['Succeed'] == '30') { // 30表示要进行3D验证
+        // 直接将定单状态设置为成功
+        $order_id = (int)$data['BillNo']; 
+        $pp_response['order_status'] = 'P';
+        $pp_response['reason_text'] = $re['Result'];
+        fn_finish_payment($order_id, $pp_response);
+
+        fn_redirect($re['redirect3dUrl'], true); // 进行3D认证
+        exit;
     } else {
         // 支付失败
         $pp_response['order_status'] = 'F';
