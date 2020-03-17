@@ -220,11 +220,13 @@ function get_product_names($order_info) {
     $products_info = "";
     if (!empty($order_info['products'])) {
         foreach ($order_info['products'] as $k => $v) {
-            $v['product'] = htmlspecialchars(strip_tags($v['product']));
+            // 产品名称 + 数量 + 价钱
+            $product=$v['product'] . '+' . $v['amount'] . '+' . $v['price'];
+            $product = htmlspecialchars(strip_tags($product));
             if ($products_info == "") {
-	            $products_info = $v['product']; 
+	            $products_info = $product; 
             } else {
-              	$products_info = $products_info.htmlspecialchars(' , ').$v['product'];
+              	$products_info = $products_info.htmlspecialchars(' , ').$product;
             }
         }
     }
