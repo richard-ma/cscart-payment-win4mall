@@ -1,0 +1,86 @@
+array(23) { 
+	["item_id"]=> string(10) "3633950862"
+	["order_id"]=> string(7) "1360123"
+	["product_id"]=> string(5) "12239"
+	["product_code"]=> string(9) "mlb178209"
+	["price"]=> string(5) "23.95"
+	["amount"]=> string(1) "1"
+	["extra"]=> array(10) {
+		["product_options"]=> array(1) { [12006]=> string(5) "52618" }
+		["unlimited_download"]=> string(1) "N"
+		["product"]=> string(61) "2018 LLWS Angels Navy Players Weekend Custom Nickname T-Shirt"
+		["company_id"]=> string(1) "1"
+		["is_edp"]=> string(1) "N"
+		["edp_shipping"]=> string(1) "N"
+		["discount"]=> int(0)
+		["base_price"]=> float(23.95)
+		["stored_price"]=> string(1) "N"
+		["product_options_value"]=> array(1) {
+			 [0]=> array(22) {
+				["option_id"]=> string(5) "12006"
+				["product_id"]=> string(5) "12239"
+				["company_id"]=> string(1) "0"
+				["option_type"]=> string(1) "S"
+				["inventory"]=> string(1) "Y"
+				["regexp"]=> string(0) ""
+				["required"]=> string(1) "N"
+				["multiupload"]=> string(1) "N"
+				["allowed_extensions"]=> string(0) ""
+				["max_file_size"]=> string(1) "0"
+				["missing_variants_handling"]=> string(1) "M"
+				["status"]=> string(1) "A"
+				["position"]=> string(2) "10"
+				["value"]=> string(5) "52618"
+				["option_name"]=> string(4) "Size"
+				["option_text"]=> string(0) ""
+				["description"]=> NULL
+				["inner_hint"]=> string(0) ""
+				["incorrect_message"]=> string(0) ""
+				["modifier"]=> string(5) "0.000"
+				["modifier_type"]=> string(1) "A"
+				["variant_name"]=> string(1) "S"
+			}
+		}
+	}
+	["product"]=> string(61) "2018 LLWS Angels Navy Players Weekend Custom Nickname T-Shirt"
+	["product_status"]=> string(1) "A"
+	["deleted_product"]=> bool(false)
+	["discount"]=> int(0)
+	["company_id"]=> string(1) "1"
+	["base_price"]=> float(23.95)
+	["original_price"]=> float(23.95)
+	["cart_id"]=> string(10) "3633950862"
+	["product_options"]=> array(1) {
+		[0]=> array(22) {
+			["option_id"]=> string(5) "12006"
+			["product_id"]=> string(5) "12239"
+			["company_id"]=> string(1) "0"
+			["option_type"]=> string(1) "S"
+			["inventory"]=> string(1) "Y"
+			["regexp"]=> string(0) ""
+			["required"]=> string(1) "N"
+			["multiupload"]=> string(1) "N"
+			["allowed_extensions"]=> string(0) ""
+			["max_file_size"]=> string(1) "0"
+			["missing_variants_handling"]=> string(1) "M"
+			["status"]=> string(1) "A"
+			["position"]=> string(2) "10"
+			["value"]=> string(5) "52618"
+			["option_name"]=> string(4) "Size"
+			["option_text"]=> string(0) ""
+			["description"]=> NULL
+			["inner_hint"]=> string(0) ""
+			["incorrect_message"]=> string(0) "" 
+			["modifier"]=> string(5) "0.000" 
+			["modifier_type"]=> string(1) "A" 
+			["variant_name"]=> string(1) "S" 
+		} 
+	} 
+	["tax_value"]=> int(0) 
+	["subtotal"]=> float(23.95) 
+	["display_subtotal"]=> float(23.95) 
+	["shipped_amount"]=> int(0) 
+	["shipment_amount"]=> string(1) "1" 
+	["is_accessible"]=> bool(true) 
+	["shared_product"]=> bool(true) 
+} 
